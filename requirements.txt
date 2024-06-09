@@ -1,0 +1,12 @@
+langchain
+langchain-community
+langchain-openai
+streamlit
+langserve
+newspaper4k
+selenium
+webdriver-manager
+streamlit-option-menu
+bs4
+feedparser
+urllib3
