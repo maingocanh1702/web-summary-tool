@@ -12,3 +12,4 @@ feedparser
 urllib3
 lxml_html_clean
 selenium
+webdriver-manager
