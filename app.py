@@ -99,6 +99,7 @@ def get_website_content(url):
     driver = get_driver()
 
     if driver is not None:
+        print(f"DEBUG:DRIVER:{driver}")
         driver.get(url)
         time.sleep(5)
         html_doc = driver.page_source
