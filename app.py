@@ -11,7 +11,6 @@ from langchain_core.output_parsers import StrOutputParser
 import newspaper
 from newspaper import ArticleException, Article
 
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -34,18 +33,19 @@ if "article" not in st.session_state:
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 #New setting
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
-options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
-options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
-
-# Khởi tạo trình duyệt Chromium với ChromeDriverManager
-driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
-
-
 # @st.cache_resource
 def get_driver():
-    return webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
+    options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
+    options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
+    driver = None
+    try:
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
+                         options=options)
+    except Exception as e:
+        print(f"DEBUG:INIT_DRIEVER:{e}")
+    return driver
 
 
 # -------------------------------- 1.Working with OpenAI and Langchain ------------------------
@@ -97,12 +97,16 @@ def get_article_content(url):
 @st.cache_data
 def get_website_content(url):
     driver = get_driver()
-    driver.get(url)
-    time.sleep(5)
-    html_doc = driver.page_source
-    driver.quit()
-    soup = BeautifulSoup(html_doc, "html.parser")
-    return soup.get_text()
+
+    if driver is not None:
+        driver.get(url)
+        time.sleep(5)
+        html_doc = driver.page_source
+        # driver.quit()
+        soup = BeautifulSoup(html_doc, "html.parser")
+        return soup.get_text()
+    else:
+        return None
 
 # 1: Summary the content in maximum of X words
 # 2: Get Key points only
@@ -170,10 +174,11 @@ def site_extraction_page():
                     content = get_website_content(url)
                     st.write(content)
         with content_col2:
-            with st.container(border=True):
-                with st.spinner("Đang tổ chức lại thông tin..."):
-                    summary_content = extract_chain.invoke({"content":content})
-                    st.write(summary_content)
+            if content is not None:
+                with st.container(border=True):
+                    with st.spinner("Đang tổ chức lại thông tin..."):
+                        summary_content = extract_chain.invoke({"content":content})
+                        st.write(summary_content)
 
 
 def news_summmary_page():
