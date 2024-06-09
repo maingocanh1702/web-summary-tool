@@ -32,13 +32,13 @@ if "article" not in st.session_state:
 # options.add_argument("--headless")  # Chạy dưới dạng headless (không hiển thị trình duyệt)
 
 #New setting
-@st.cache_resource
-def init_webdriver():
-    options = Options()
-    options.add_argument('--disable-gpu')
-    options.add_argument('--headless')
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    return driver
+# @st.cache_resource
+# def init_webdriver():
+options = Options()
+options.add_argument('--disable-gpu')
+options.add_argument('--headless')
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 
 
 # -------------------------------- 1.Working with OpenAI and Langchain ------------------------
@@ -87,13 +87,13 @@ def get_article_content(url):
     return article
 
 #Keep text only
-# @st.cache_data
+@st.cache_data
 def get_website_content(url):
-    driver = init_webdriver()
+    # driver = init_webdriver()
     driver.get(url)
     time.sleep(5)
     html_doc = driver.page_source
-    # driver.quit()
+    driver.quit()
     soup = BeautifulSoup(html_doc, "html.parser")
     return soup.get_text()
 
