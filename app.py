@@ -11,7 +11,9 @@ from langchain_core.output_parsers import StrOutputParser
 import newspaper
 from newspaper import ArticleException, Article
 
+
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import time
@@ -25,8 +27,14 @@ if "article" not in st.session_state:
 
 
 #----------- Setting for Selenium -------------------------
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")  # Chạy dưới dạng headless (không hiển thị trình duyệt)
+# Old setting
+# options = webdriver.ChromeOptions()
+# options.add_argument("--headless")  # Chạy dưới dạng headless (không hiển thị trình duyệt)
+
+#New setting
+options = Options()
+options.add_argument('--disable-gpu')
+options.add_argument('--headless')
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 
@@ -118,7 +126,7 @@ def main_sidebar():
     # 1.Vertical Menu
     options = ["1.Tóm tắt nội dung bài báo", "2.Trích thông tin từ web"]
 
-    selected_menu = option_menu(None,options,icons=["book","cup-hot"],menu_icon="cast",orientation="horizontal",default_index=1)
+    selected_menu = option_menu(None,options,icons=["book","cup-hot"],menu_icon="cast",orientation="horizontal",default_index=0)
 
     if selected_menu == options[0]:
         news_summmary_page()
@@ -159,9 +167,9 @@ def site_extraction_page():
 
 def news_summmary_page():
     # Cliked button demo
-    SAMPLE_URL = "https://vnexpress.net/dan-ca-voi-sat-thu-nhan-chim-du-thuyen-dai-15-m-4746134.html"
+    SAMPLE_URL = "https://cafef.vn/goc-nhin-chuyen-gia-thi-truong-chung-khoan-se-som-vuot-dinh-mot-so-nhom-co-phieu-co-the-xuat-hien-song-nganh-188240609124744797.chn"
 
-    url = st.text_input(label="Nhập URL của bài báo cần tóm tắt: ", placeholder="https://example.com", value=SAMPLE_URL)
+    url = st.text_input(label="Nhập URL của bài báo cần tóm tắt: ", placeholder="https://example.com/info.html", value=SAMPLE_URL)
     clicked = st.button("Tải nội dung",type="primary")
     if clicked:
         try:
