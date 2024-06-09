@@ -16,6 +16,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.os_manager import ChromeType
 import time
 import os
 from bs4 import BeautifulSoup
@@ -30,15 +31,21 @@ if "article" not in st.session_state:
 # Old setting
 # options = webdriver.ChromeOptions()
 # options.add_argument("--headless")  # Chạy dưới dạng headless (không hiển thị trình duyệt)
+# driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 #New setting
-# @st.cache_resource
-# def init_webdriver():
-options = Options()
-options.add_argument("--headless=new")
-options.add_argument('--disable-gpu')
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
+options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
+options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
 
+# Khởi tạo trình duyệt Chromium với ChromeDriverManager
+driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
+
+
+@st.cache_resource
+def get_driver():
+    return webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
 
 
 # -------------------------------- 1.Working with OpenAI and Langchain ------------------------
@@ -89,7 +96,7 @@ def get_article_content(url):
 #Keep text only
 @st.cache_data
 def get_website_content(url):
-    # driver = init_webdriver()
+    driver = get_driver()
     driver.get(url)
     time.sleep(5)
     html_doc = driver.page_source
@@ -130,7 +137,7 @@ def main_sidebar():
     # 1.Vertical Menu
     options = ["1.Tóm tắt nội dung bài báo", "2.Trích thông tin từ web"]
 
-    selected_menu = option_menu(None,options,icons=["book","cup-hot"],menu_icon="cast",orientation="horizontal",default_index=0)
+    selected_menu = option_menu(None,options,icons=["book","cup-hot"],menu_icon="cast",orientation="horizontal",default_index=1)
 
     if selected_menu == options[0]:
         news_summmary_page()
