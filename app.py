@@ -101,7 +101,7 @@ def get_website_content(url):
     if driver is not None:
         print(f"DEBUG:DRIVER:{driver}")
         driver.get(url)
-        time.sleep(5)
+        time.sleep(10)
         html_doc = driver.page_source
         # driver.quit()
         soup = BeautifulSoup(html_doc, "html.parser")
@@ -140,9 +140,9 @@ def show_summary(article_json):
 #---------------- Page & UI/UX Components ------------------------
 def main_sidebar():
     # 1.Vertical Menu
-    options = ["1.Tóm tắt nội dung bài báo", "2.Trích thông tin từ web"]
+    options = ["1.Tóm tắt nội dung bài báo", "2.Trích thông tin từ web (alpha)"]
 
-    selected_menu = option_menu(None,options,icons=["book","cup-hot"],menu_icon="cast",orientation="horizontal",default_index=1)
+    selected_menu = option_menu(None,options,icons=["book","cup-hot"],menu_icon="cast",orientation="horizontal",default_index=0)
 
     if selected_menu == options[0]:
         news_summmary_page()
