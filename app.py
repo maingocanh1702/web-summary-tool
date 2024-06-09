@@ -35,14 +35,8 @@ if "article" not in st.session_state:
 # @st.cache_resource
 # def init_webdriver():
 options = Options()
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-options.add_argument("--disable-gpu")
-options.add_argument("--disable-features=NetworkService")
-options.add_argument("--window-size=1920x1080")
-options.add_argument("--disable-features=VizDisplayCompositor")
-options.add_argument('--ignore-certificate-errors')
+options.add_argument("--headless=new")
+options.add_argument('--disable-gpu')
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
 
