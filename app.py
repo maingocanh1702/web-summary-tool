@@ -80,7 +80,7 @@ key_points_prompt = ChatPromptTemplate.from_messages([
 ---------
 """)
 ])
-llm = ChatOpenAI(model="gpt-4o", api_key=st.secrets['OPENAI_API_KEY'])
+llm = ChatOpenAI(model="gpt-3.5-turbo", api_key=st.secrets['OPENAI_API_KEY'])
 llm.temperature = 0.2
 output_parser = StrOutputParser()
 chain = prompt|llm|output_parser
