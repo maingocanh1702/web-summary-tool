@@ -43,7 +43,7 @@ options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa s
 driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
 
 
-@st.cache_resource
+# @st.cache_resource
 def get_driver():
     return webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
 
