@@ -31,14 +31,14 @@ if "article" not in st.session_state:
 # options = webdriver.ChromeOptions()
 # options.add_argument("--headless")  # Chạy dưới dạng headless (không hiển thị trình duyệt)
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
+options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
+options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
 
 #New setting
 # @st.cache_resource
 def get_driver():
-    options = webdriver.ChromeOptions()
-    options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
-    options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
-    options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
     driver = None
     try:
         driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
