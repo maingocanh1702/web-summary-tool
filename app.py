@@ -40,10 +40,10 @@ def get_driver():
     driver = None
     try:
         #Using on Local
-        # driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
+        driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
 
         #Using on Streamlit Cloud
-        driver = webdriver.Chrome(ChromiumService(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
+        # driver = webdriver.Chrome(ChromiumService(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
     except Exception as e:
         print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
     return driver
