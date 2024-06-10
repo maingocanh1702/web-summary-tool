@@ -12,10 +12,9 @@ import newspaper
 from newspaper import ArticleException, Article
 
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.os_manager import ChromeType
+from selenium.webdriver.chrome.service import Service as ChromiumService
 import time
 import os
 from bs4 import BeautifulSoup
@@ -37,14 +36,16 @@ options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headl
 options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
 
 #New setting
-# @st.cache_resource
 def get_driver():
     driver = None
     try:
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
-                         options=options)
+        #Using on Local
+        # driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
+
+        #Using on Streamlit Cloud
+        driver = webdriver.Chrome(ChromiumService(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
     except Exception as e:
-        print(f"DEBUG:INIT_DRIEVER:{e}")
+        print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
     return driver
 
 
@@ -88,7 +89,6 @@ keypoints_chain = key_points_prompt|llm|output_parser
 
 
 # -------------------------------- 2, Working with Page content ------------------------
-@st.cache_data
 def get_article_content(url):
     article = newspaper.article(url)
     return article
@@ -103,7 +103,7 @@ def get_website_content(url):
         driver.get(url)
         time.sleep(10)
         html_doc = driver.page_source
-        # driver.quit()
+        driver.quit()
         soup = BeautifulSoup(html_doc, "html.parser")
         return soup.get_text()
     else:
