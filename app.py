@@ -94,7 +94,6 @@ def get_article_content(url):
     return article
 
 #Keep text only
-@st.cache_data
 def get_website_content(url):
     driver = get_driver()
 
