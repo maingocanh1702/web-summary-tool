@@ -82,8 +82,6 @@ def get_website_content(url):
     try:
         # Using on Local
         options = webdriver.ChromeOptions()
-        # options.binary_location = '/usr/bin/chromium'
-        # options.binary_location = '/Applications/Chromium.app/Contents/MacOS/Chromium'
         options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
         options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
         options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
