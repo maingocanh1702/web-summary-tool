@@ -76,7 +76,7 @@ def get_article_content(url):
     return article
 
 #Keep text only
-@st.cache_data(ttl=3600)
+# @st.cache_data(ttl=3600)
 def get_website_content(url):
     driver = None
     try:
