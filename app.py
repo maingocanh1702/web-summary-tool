@@ -46,6 +46,11 @@ def get_driver():
         driver = webdriver.Chrome(ChromiumService(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
     except Exception as e:
         print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+        try:
+            print(f"DEBUG:TRY AGAIN")
+            driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
+        except Exception as e:
+            print(f"DEBUG:INIT_DRIVER:ERROR AGAIN:{e}")
     return driver
 
 
