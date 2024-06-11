@@ -82,6 +82,8 @@ def get_website_content(url):
     try:
         # Using on Local
         options = webdriver.ChromeOptions()
+        options.binary_location = '/usr/local/bin/chromium'
+        # options.binary_location = '/Applications/Chromium.app/Contents/MacOS/Chromium'
         options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
         options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
         options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
@@ -165,12 +167,12 @@ def site_extraction_page():
                 with st.spinner("Đang tải nội dung website..."):
                     content = get_website_content(url)
                     st.write(content)
-        with content_col2:
-            if content is not None:
-                with st.container(border=True):
-                    with st.spinner("Đang tổ chức lại thông tin..."):
-                        summary_content = extract_chain.invoke({"content":content})
-                        st.write(summary_content)
+        # with content_col2:
+        #     if content is not None:
+        #         with st.container(border=True):
+                    # with st.spinner("Đang tổ chức lại thông tin..."):
+                        # summary_content = extract_chain.invoke({"content":content})
+                        # st.write(summary_content)
 
 
 def news_summmary_page():
