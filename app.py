@@ -87,7 +87,7 @@ def get_website_content(url):
         options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
         options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
         options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager(ChromeType.CHROMIUM).install()), options=options)
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         print(f"DEBUG:DRIVER:{driver}")
         driver.get(url)
         time.sleep(10)
