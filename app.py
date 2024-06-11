@@ -79,27 +79,27 @@ def get_article_content(url):
 @st.cache_data(ttl=3600)
 def get_website_content(url):
     driver = None
-    # try:
+    try:
         # Using on Local
-    options = webdriver.ChromeOptions()
-    # options.binary_location = '/usr/bin/chromium'
-    # options.binary_location = '/Applications/Chromium.app/Contents/MacOS/Chromium'
-    options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
-    options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
-    options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager(ChromeType.CHROMIUM).install()), options=options)
-    print(f"DEBUG:DRIVER:{driver}")
-    driver.get(url)
-    time.sleep(10)
-    html_doc = driver.page_source
-    driver.quit()
-    soup = BeautifulSoup(html_doc, "html.parser")
-    return soup.get_text()
-    # except Exception as e:
-    #     print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
-    # finally:
-    #     if driver is not None: driver.quit()
-    # return None
+        options = webdriver.ChromeOptions()
+        # options.binary_location = '/usr/bin/chromium'
+        # options.binary_location = '/Applications/Chromium.app/Contents/MacOS/Chromium'
+        options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
+        options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
+        options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager(ChromeType.CHROMIUM).install()), options=options)
+        print(f"DEBUG:DRIVER:{driver}")
+        driver.get(url)
+        time.sleep(10)
+        html_doc = driver.page_source
+        driver.quit()
+        soup = BeautifulSoup(html_doc, "html.parser")
+        return soup.get_text()
+    except Exception as e:
+        print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+    finally:
+        if driver is not None: driver.quit()
+    return None
 
 # 1: Summary the content in maximum of X words
 # 2: Get Key points only
