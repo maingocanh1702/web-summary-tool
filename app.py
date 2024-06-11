@@ -30,29 +30,6 @@ if "article" not in st.session_state:
 # options = webdriver.ChromeOptions()
 # options.add_argument("--headless")  # Chạy dưới dạng headless (không hiển thị trình duyệt)
 # driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-options = webdriver.ChromeOptions()
-options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
-options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
-options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
-
-#New setting
-def get_driver():
-    driver = None
-    try:
-        #Using on Local
-        # driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
-
-        #Using on Streamlit Cloud
-        driver = webdriver.Chrome(ChromiumService(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
-    except Exception as e:
-        print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
-        try:
-            print(f"DEBUG:TRY AGAIN")
-            driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
-        except Exception as e:
-            print(f"DEBUG:INIT_DRIVER:ERROR AGAIN:{e}")
-    return driver
-
 
 # -------------------------------- 1.Working with OpenAI and Langchain ------------------------
 env_openai_key = "OPENAI_API_KEY"
@@ -99,10 +76,16 @@ def get_article_content(url):
     return article
 
 #Keep text only
+@st.cache_data(ttl=3600)
 def get_website_content(url):
-    driver = get_driver()
-
-    if driver is not None:
+    driver = None
+    try:
+        # Using on Local
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
+        options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
+        options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
+        driver = webdriver.Chrome(service=ChromiumService(ChromeDriverManager().install()), options=options)
         print(f"DEBUG:DRIVER:{driver}")
         driver.get(url)
         time.sleep(10)
@@ -110,11 +93,15 @@ def get_website_content(url):
         driver.quit()
         soup = BeautifulSoup(html_doc, "html.parser")
         return soup.get_text()
-    else:
-        return None
+    except Exception as e:
+        print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+    finally:
+        if driver is not None: driver.quit()
+    return None
 
 # 1: Summary the content in maximum of X words
 # 2: Get Key points only
+@st.cache_data(ttl=3600)
 def get_summary(url,option=1,params=None):
     article = get_article_content(url)
     # print(f"DEBUG:ARTICLE:{article.to_json()}")
