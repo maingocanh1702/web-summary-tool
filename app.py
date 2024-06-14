@@ -38,7 +38,7 @@ if env_openai_key not in os.environ:
 
 prompt = ChatPromptTemplate.from_messages([
     ("system","Bạn là một chuyển gia tổng hợp báo chí. Luôn luôn sử dụng nội dung tiếng Việt cho mọi câu trả lời. "),
-    ("user","""Từ nội dung bài viết tôi đưa cho bạn : {content}. Hãy tổng hợp các thông tin chính, luôn cố gắng giữ các nội dung hỗ trợ cho các thông tin chính nhiều nất có thể. Đoạn văn tổng hợp không quá {summary_length} ký tự. Câu trả lời được trả về dưới dạng HTML như trong ví dụ dưới trong đó các thông tin về tên riêng, thời gian, tiền, và các thông tin tài chính khác luôn là những thông tin quan trọng cần phải highligh bằng màu đỏ. Dưới đây là một ví dụ của bản tin trả về có thông tin được highlight:
+    ("user","""Từ nội dung bài viết tôi đưa cho bạn : {content}. Hãy tổng hợp các thông tin chính bằng 1 đoạn có độ dài dưới {summary_length} từ. Khi tóm tắt giữ các nội dung hỗ trợ cho các thông tin chính đầy đủ nhưng ngắn gọn. Câu trả lời được trả về dưới dạng HTML như trong ví dụ dưới trong đó các thông tin về tên riêng, thời gian, tiền, và các thông tin tài chính khác luôn là những thông tin quan trọng cần phải highligh bằng màu đỏ. Dưới đây là một ví dụ của bản tin trả về có thông tin được highlight:
 ---------
 "<strong style="color: red;">Wagely</strong>, nền tảng tài chính cá nhân dành cho người lao động, đã thành công trong việc huy động <strong style="color: red;">23 triệu USD</strong> trong vòng gọi vốn mới. Điều này sẽ giúp Wagely mở rộng dịch vụ của mình và tăng cường sức mạnh tài chính.</p>
 <ul>
@@ -64,7 +64,7 @@ key_points_prompt = ChatPromptTemplate.from_messages([
 """)
 ])
 llm = ChatOpenAI(model="gpt-3.5-turbo", api_key=st.secrets['OPENAI_API_KEY'])
-llm.temperature = 0.2
+llm.temperature = 0.5
 output_parser = StrOutputParser()
 chain = prompt|llm|output_parser
 keypoints_chain = key_points_prompt|llm|output_parser
@@ -85,16 +85,16 @@ def get_website_content(url):
         options.add_argument('--headless')  # Chạy trình duyệt ở chế độ headless (không hiển thị giao diện)
         options.add_argument('--disable-gpu')  # Vô hiệu hóa GPU (nếu chạy headless)
         options.add_argument('--window-size=1920,1200')  # Đặt kích thước cửa sổ trình duyệt
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
-        print(f"DEBUG:DRIVER:{driver}")
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        st.write(f"DEBUG:DRIVER:{driver}")
         driver.get(url)
-        time.sleep(10)
+        time.sleep(7)
         html_doc = driver.page_source
         driver.quit()
         soup = BeautifulSoup(html_doc, "html.parser")
         return soup.get_text()
     except Exception as e:
-        print(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+        st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
     finally:
         if driver is not None: driver.quit()
     return None
