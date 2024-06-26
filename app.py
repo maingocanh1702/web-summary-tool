@@ -93,10 +93,10 @@ def show_summary(article, content):
     summary_html = f"""<div style="padding: 10px; border-radius: 5px;">
                                         <p> Nội dung tóm tắt của bài viết: </p>
                                         <h4 style="color: darkgreen;">{article.title}</h4>
-                                        <p> Ngày xuất bản:{article.publish_date}</p>
-                                        <p> {content}</p>
+                                        <p> Ngày xuất bản:{article.publish_date}</p>                       
                                         </div>"""
     st.markdown(summary_html, unsafe_allow_html=True)
+    st.markdown(content)
 
 def gen_summary_content(article,regen = False):
     if (article.summary == "" or regen == True):
@@ -116,13 +116,14 @@ def gen_keypoints_content(article,regen = False):
 # ---------------- Page & UI/UX Components ------------------------
 # Horizontal Navigation Menu
 def main_sidebar():
-    options = ["1.Tóm tắt Tin tức", "2.Lọc nội dung chính của Website bất kì "]
-    selected_menu = option_menu(None, options, icons=["book", "cup-hot"], menu_icon="cast", orientation="horizontal",
-                                default_index=0)
-    if selected_menu == options[0]:
-        news_summmary_page()
-    elif selected_menu == options[1]:
-        site_extraction_page()
+    news_summmary_page()
+    # options = ["1.Website Summary", "2.Web Extraction "]
+    # selected_menu = option_menu(None, options, icons=["book", "cup-hot"], menu_icon="cast", orientation="horizontal",
+    #                             default_index=0)
+    # if selected_menu == options[0]:
+    #     news_summmary_page()
+    # elif selected_menu == options[1]:
+    #     site_extraction_page()
 
 
 def site_extraction_page():
@@ -163,9 +164,10 @@ def site_extraction_page():
 
 def news_summmary_page():
     # Cliked button demo
-    SAMPLE_URL = "https://cafef.vn/goc-nhin-chuyen-gia-thi-truong-chung-khoan-se-som-vuot-dinh-mot-so-nhom-co-phieu-co-the-xuat-hien-song-nganh-188240609124744797.chn"
+    st.header("📰 Website Summary Tool")
+    SAMPLE_URL = "https://9to5mac.com/2024/06/26/apple-watch-series-10-bigger-screen/"
 
-    INPUT_URL = st.text_input(label="News URL: ", placeholder="https://example.com/info.html", value=SAMPLE_URL)
+    INPUT_URL = st.text_input(label="Input Your Url (This app works best for content from Press Websites): ", placeholder="https://example.com/info.html", value=SAMPLE_URL)
     if INPUT_URL != "":
         URL = utils.remove_query_string(INPUT_URL)  # cleaned URL
     else:
