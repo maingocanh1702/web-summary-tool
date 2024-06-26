@@ -91,9 +91,9 @@ def invoke_chatgpt(content, action_type=1, params=None):
 # ---------------- Display the results ------------------------
 def show_summary(article, content):
     summary_html = f"""<div style="padding: 10px; border-radius: 5px;">
-                                        <p> Nội dung tóm tắt của bài viết: </p>
+                                        <p> Content Summary: </p>
                                         <h4 style="color: darkgreen;">{article.title}</h4>
-                                        <p> Ngày xuất bản:{article.publish_date}</p>                       
+                                        <p> Publish Date:{article.publish_date}</p>                       
                                         </div>"""
     st.markdown(summary_html, unsafe_allow_html=True)
     st.markdown(content)
